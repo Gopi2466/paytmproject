@@ -73,9 +73,27 @@ router.post("/signin", async function(req, res) {
         message: "Error while logging in."
     })
 })
+const updateBody = zod.object({
+    password: zod.string().min(8),
+    firstName: zod.string(),
+    lastName: zod.string()
+})
 
-router.put("/", authMiddleware, function(req, res) {
-    
+router.put("/", authMiddleware, async function(req, res) {
+    const password = req.body.password;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const { success } = updateBody.safeParse(req.body);
+    if (!success) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+    await User.updateOne({_id: req.userId}, req.body)
+   
+    res.json({
+        message:"Updated successfully"
+    })
 })
 
 module.exports = router;
