@@ -18,8 +18,6 @@ export function Users() {
 }
 
 
-
-
 export function User({user}) {
     return <div className="flex justify-between h-14 mt-4">
         <div className="flex">
