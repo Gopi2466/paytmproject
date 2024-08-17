@@ -1,8 +1,9 @@
 const express = require("express");
 const { authMiddleware } = require("../middleware");
-const router = express.Router;
-const mongoose = require("mongoose")
+const router = express.Router();
+const{ default: mongoose } = require("mongoose")
 const { Account } = require("../db")
+
 router.get("/balance",authMiddleware, async function(req, res) {
     try {
     const userAccount = await Account.findOne({userId: req.userId});
@@ -102,5 +103,5 @@ router.post("/transfer", authMiddleware, async function(req,res) {
 });
 
 
-module.exports = { router };
+module.exports = router;
 

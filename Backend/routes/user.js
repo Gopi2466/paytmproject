@@ -3,14 +3,14 @@ const zod = require("zod");
 const router = express.Router();
 const jwt = require("jsonwebtoken")
 const { JWT_SECRET } = require("../config")
-const User = require("../db")
+const { User, Account } = require("../db")
 const authMiddleware = require("../middleware")
 
 const signupSchema = zod.object({
     username: zod.string().email(),
     password: zod.string().min(6),
-    firstname: zod.string().max(50),
-    lastname: zod.string().max(50)
+    firstName: zod.string().max(50),
+    lastName: zod.string().max(50)
 })
 
 router.post("/signup",async function(req,res) {
@@ -31,11 +31,11 @@ router.post("/signup",async function(req,res) {
     const user = await User.create({
         username: userData.username,
         password: userData.password,
-        firstname: userData.firstname,
-        lastname: userData.lastname
+        firstName: userData.firstName,
+        lastName: userData.lastName
     })
     const userId = user._id;
-    const userAccount = await Account.create({
+    await Account.create({
         userId,
         balance: 1 + Math.random()*10000
     })
@@ -83,24 +83,21 @@ const updateBody = zod.object({
     lastName: zod.string()
 })
 
-router.put("/", authMiddleware, async function(req, res) {
-    const password = req.body.password;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const { success } = updateBody.safeParse(req.body);
-    if (!success) {
-        res.status(411).json({
-            message: "Error while updating information"
-        })
-    }
-    await User.updateOne({_id: req.userId}, req.body)
+// router.put("/", authMiddleware, async (req, res) => {
+//     const { success } = updateBody.safeParse(req.body);
+//     if (!success) {
+//         res.status(411).json({
+//             message: "Error while updating information"
+//         })
+//     }
+//     await User.updateOne(req.body, { _id: req.userId})
    
-    res.json({
-        message:"Updated successfully"
-    })
-})
+//     res.json({
+//         message:"Updated successfully"
+//     })
+// });
 
-router.get("/bulk", authMiddleware, async function(req, res) {
+router.get("/bulk", async function(req, res) {
     // query parameters.
     const filter = req.query.filter || "";
 try{

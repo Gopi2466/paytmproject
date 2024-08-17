@@ -1,9 +1,9 @@
 const express = require("express");
 
-const router = express.Router();
+
 const userRouter = require("./user")
 const accountRouter = require("./accounts")
-
+const router = express.Router();
 
 
 router.use("/user", userRouter);
