@@ -5,17 +5,22 @@ import { Heading } from "./Heading";
 import { InputBox } from "./InputBox";
 import { InputLabel } from "./inputLabel";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom"
 export function Signin() {
     const [userSignin, setUserSignin] = useState("")
     const [userPassword, setUserPassword] = useState("")
+    const Navigate = useNavigate();
     async function fetchSignin() {
 
         const response = await axios.post("http://localhost:3000/api/v1/user/signin",{
             username: userSignin,
             password: userPassword
         })
-        console.log(response.data)
+        if(response) {
+            Navigate("/dashboard");
+        }
+        console.log(response.data.token)
+        localStorage.setItem("token", response.data.token)
     }
 
     return<div className="bg-slate-300 h-screen flex justify-center ">
@@ -32,3 +37,5 @@ export function Signin() {
         </div>
     </div>
 }
+// Logic for when the button is clicked to redirect us to a new webpage but only if the response is a success.
+// if signed In return this or return a different dashboard.

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { BottomWarning } from "./BottomWarning"
 import { Button } from "./Button"
 import { Heading } from "./Heading"
@@ -12,6 +13,7 @@ export function Signup() {
     const [signupFirstName, setSignupFirstName] = useState("")
     const [signupLastName, setSignupLastName] = useState("")
     const [signupPassword, setSignupPassword] = useState("")
+    const SignUpNavigate = useNavigate();
        // how can I create a sigle state variable to update all teh values
 
     async function fetchSignup() {
@@ -22,8 +24,12 @@ export function Signup() {
                 firstName: signupFirstName,
                 lastName: signupLastName
     });
-
-        console.log(response.data);
+    if(response) {
+        SignUpNavigate("/dashboard");
+    }
+    console.log(response.data.token)
+    localStorage.setItem("token", response.data.token)
+        
     }
 
 
